@@ -8,7 +8,7 @@ ipfCalc.directive('mtuValid', function(){
 		link: function(scope, elm, attrs, ctrl) {
 			ctrl.$parsers.unshift(function(viewValue) {
 				var value = viewValue - scope.data.headerSize;
-				if(value > 0 && value % 8 == 0){
+				if(value > scope.data.headerSize){ /* MHD fixed*/
 					ctrl.$setValidity('mtuValid', true);
 					return viewValue;
 				} else {
@@ -34,8 +34,8 @@ ipfCalc.controller('CalculateController', function($scope) {
 		//Initializing the data...
 		$scope.fragments = [];
 		var headerSize = data.headerSize;
-		var remaining = data.dataSize - headerSize;
-		var maxSize = data.mtuSize - headerSize;
+		var remaining = data.dataSize /*- headerSize*/; /* MHD fixed*/
+		var maxSize = Math.floor((data.mtuSize-data.headerSize)/8)*8; /* MHD fixed*/
 		var flag = 1;
 		var offset = 0;
 
@@ -43,9 +43,9 @@ ipfCalc.controller('CalculateController', function($scope) {
 		while(remaining > 0){
 			var length = 0;
 			if(maxSize < remaining){
-				length = maxSize;
+				length = maxSize + headerSize; /* MHD fixed*/
 			} else {
-				length = remaining;
+				length = remaining + headerSize; /* MHD fixed*/
 				flag = 0;
 			}
 
@@ -57,8 +57,8 @@ ipfCalc.controller('CalculateController', function($scope) {
 			})
 
 			//until everything has been sent.
-			remaining -= length;
-			offset = ~~(((offset*8)+length)/8);
+			remaining -= length - headerSize; /* MHD fixed*/
+			offset = ~~(((offset*8)+length -headerSize)/8); /* MHD fixed*/
 		}
 	};
 });

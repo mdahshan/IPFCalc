@@ -1,3 +1,9 @@
+# Fork information
+
+This is a fork of the IP Fragmentation Calculator created by ``fixmycode``. It includes some fixes, as indicated in ``index.html`` and ``app.js`` files.
+
+The rest of the description is by the original author.
+
 # IP Fragmentation Calculator
 
 This little application is intended to represent what happens to a datagram of certain size when it's subject to fragmentation due to the MTU. You can modify the data length and the MTU size and calculate the length and the offset of each fragment. Note that the MTU has a minimum size of 28.
